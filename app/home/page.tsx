@@ -26,7 +26,8 @@ export default function HomePage() {
   const progressPercentage = (userData.currentAttendance / 7) * 100; // A등급(7회) 기준
   const [isScannerOpen, setIsScannerOpen] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-
+ 
+  
   const handleScanSuccess = (data: string) => {
     setIsScannerOpen(false);
     
