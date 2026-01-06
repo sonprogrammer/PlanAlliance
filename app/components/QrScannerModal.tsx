@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import { Html5Qrcode } from 'html5-qrcode'; // Scanner 대신 더 세밀한 제어가 가능한 Html5Qrcode 사용
+import { Html5Qrcode } from 'html5-qrcode';
 import { X, Camera } from 'lucide-react';
 
 export default function QrScannerModal({ onClose, onScanSuccess }: { 
@@ -9,72 +9,90 @@ export default function QrScannerModal({ onClose, onScanSuccess }: {
   onScanSuccess: (data: string) => void 
 }) {
   const scannerRef = useRef<Html5Qrcode | null>(null);
+  const isInitialized = useRef(false); // [추가] 초기화 여부 체크용
 
   useEffect(() => {
-    const scannerId = "reader";
+    // 이미 초기화 중이라면 중복 실행 방지
+    if (isInitialized.current) return;
     
-    // 인스턴스 생성
+    const scannerId = "reader";
     const html5QrCode = new Html5Qrcode(scannerId);
     scannerRef.current = html5QrCode;
+    isInitialized.current = true;
 
     const startScanner = async () => {
       try {
-        // 카메라 권한 확인 및 시작
         await html5QrCode.start(
-          { facingMode: "environment" }, // 후면 카메라 우선
+          { facingMode: "environment" },
           {
             fps: 10,
-            qrbox: { width: 250, height: 250 },
+            qrbox: (viewWidth, viewHeight) => {
+              const minEdge = Math.min(viewWidth, viewHeight);
+              return { width: minEdge * 0.7, height: minEdge * 0.7 };
+            },
           },
           (decodedText) => {
             if (navigator.vibrate) navigator.vibrate(100);
             onScanSuccess(decodedText);
           },
-          () => {} // 스캔 실패(코드 미검출) 시 로직은 비워둠
+          () => {} 
         );
       } catch (err) {
         console.error("카메라 시작 에러:", err);
-        alert("카메라를 켤 수 없습니다. 권한 설정을 확인하거나 HTTPS 환경인지 확인해주세요.");
-        onClose();
+        // 권한 문제 등이 있을 때만 에러 메시지
+        if (!err?.toString().includes("Already scanning")) {
+            alert("카메라를 켤 수 없습니다.");
+            onClose();
+        }
       }
     };
 
     startScanner();
 
-    // 언마운트 시 클린업 (매우 중요)
+    // 언마운트 시 클린업
     return () => {
-      if (scannerRef.current && scannerRef.current.isScanning) {
-        scannerRef.current.stop().then(() => {
-          scannerRef.current?.clear();
-        }).catch(err => console.error("Stop failed", err));
+      isInitialized.current = false;
+      if (scannerRef.current) {
+        // 스캔 중이라면 멈추고 객체 정리
+        if (scannerRef.current.isScanning) {
+          scannerRef.current.stop()
+            .then(() => {
+              scannerRef.current?.clear();
+            })
+            .catch(err => console.error("Scanner stop failed", err));
+        }
       }
     };
   }, [onScanSuccess, onClose]);
 
   return (
-    <div className="fixed inset-0 z-[1000] bg-black flex flex-col items-center justify-center">
+    <div className="fixed inset-0 z-[1000] h-[100dvh] w-screen bg-black flex flex-col items-center justify-center overflow-hidden">
       {/* 닫기 버튼 */}
       <button 
         onClick={onClose}
-        className="absolute top-8 right-8 z-[1001] p-3 bg-white/10 rounded-full text-white backdrop-blur-md"
+        className="absolute top-8 right-8 z-[1001] p-3 bg-white/10 rounded-full text-white backdrop-blur-md active:scale-95"
       >
         <X className="w-6 h-6" />
       </button>
 
       {/* 가이드 문구 */}
-      <div className="absolute top-20 text-center z-[1001]">
+      <div className="absolute top-20 text-center z-[1001] pointer-events-none">
         <Camera className="w-8 h-8 text-blue-500 mx-auto mb-2" />
         <h3 className="text-white font-bold text-lg">QR 코드 스캔</h3>
-        <p className="text-white/60 text-sm mt-1">사각형 안에 QR 코드를 맞춰주세요</p>
+        <p className="text-white/60 text-sm mt-1 px-6">사각형 안에 QR 코드를 맞춰주세요</p>
       </div>
 
-      {/* 카메라 뷰 */}
-      <div id="reader" className="w-full h-full object-cover" />
+      {/* 카메라 뷰: [&>video] 선택자로 라이브러리가 생성한 비디오 스타일 강제 제어 */}
+      <div id="reader" className="w-full h-full [&>video]:w-full [&>video]:h-full [&>video]:object-cover" />
 
       {/* 스캔 가이드 라인 디자인 */}
-      <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
+      <div className="absolute inset-0 pointer-events-none flex items-center justify-center z-[1001]">
         <div className="w-64 h-64 border-2 border-white/20 rounded-3xl relative">
-          <div className="absolute inset-0 border-2 border-blue-500 rounded-3xl animate-pulse" />
+          <div className="absolute -top-1 -left-1 w-6 h-6 border-t-4 border-l-4 border-blue-500 rounded-tl-lg" />
+          <div className="absolute -top-1 -right-1 w-6 h-6 border-t-4 border-r-4 border-blue-500 rounded-tr-lg" />
+          <div className="absolute -bottom-1 -left-1 w-6 h-6 border-b-4 border-l-4 border-blue-500 rounded-bl-lg" />
+          <div className="absolute -bottom-1 -right-1 w-6 h-6 border-b-4 border-r-4 border-blue-500 rounded-br-lg" />
+          <div className="absolute inset-0 border border-blue-500/30 rounded-3xl animate-pulse" />
         </div>
       </div>
     </div>
