@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "플랜얼라이언스",
+  title: "Alliance",
   description: "온라인 출석체크",
 };
 
