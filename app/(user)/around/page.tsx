@@ -2,34 +2,36 @@
 
 import { useState } from 'react';
 
-import { useGetNearByShops } from '@/features/search-shop/model/useGetNearByShops';
 import { AroundHeader } from '@/widgets/around/ui/AroundHeader';
 import { MapContainer } from '@/widgets/around/ui/MapContainer';
 import { KakaoPlace } from '@/shared/types/map';
 import { PlaceListState } from '@/entities/place/ui/PlaceListState';
 import { BottomSheet } from '@/shared/ui/place/BottomSheet';
 import { PlaceDetailSheet } from '@/entities/place/ui/PlaceDetailSheet';
+import { useAroundLogic } from '@/widgets/around/model/useAroundLogic';
 
 export default function AroundPage() {
-  const [showMap, setShowMap] = useState<boolean>(false)
   const [selectedPlace, setSelectedPlace] = useState<KakaoPlace | null>(null)
-  const { data, isPending } = useGetNearByShops()
-
-  const center = data.center
-  const places = data.places
-  console.log('selecte', !!selectedPlace)
+  
+  const { showMap, keyword, setKeyword, handleToggleMap, displayCenter, displayShops, isPending} = useAroundLogic()
   return (
     <div className="bg-[#FFFBEB] h-screen pb-24">
 
-      <AroundHeader showMap={showMap} toggle={() => setShowMap(prev => !prev)} />
+      <AroundHeader 
+          showMap={showMap} 
+          toggle={handleToggleMap} 
+          onSearch={setKeyword}
+          keyword={keyword}
+      />
 
       <main>
-        {showMap && (
+        {showMap && displayShops.length > 0 && (
           <MapContainer
-            center={center}
-            places={places}
+            center={displayCenter}
+            places={displayShops}
             onMarkerClick={(place: KakaoPlace) => {
               console.log('내 장소:', place)
+              setSelectedPlace(place)
             }}
           />
         )}
@@ -38,7 +40,7 @@ export default function AroundPage() {
 
           <PlaceListState
             isPending={isPending}
-            places={places}
+            places={displayShops}
             onPlaceClick={(place) => {
               console.log('place info', place)
               setSelectedPlace(place)

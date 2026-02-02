@@ -13,7 +13,8 @@ export function NearByPlace() {
     const router = useRouter()
     const [selectedPlace, setSelectedPlace] = useState<KakaoPlace | null>(null)
     const { data, isPending } = useGetNearByShops()
-    const places = data.places
+    
+    const places = data?.places
 
     return (
         <section className="space-y-4">

@@ -8,4 +8,6 @@ export interface PlaceListProps{
 export interface AroundHeaderProps{
     showMap: boolean 
     toggle: () => void
+    onSearch: (keyword: string) => void
+    keyword: string;
 }
