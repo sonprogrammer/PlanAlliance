@@ -4,6 +4,8 @@ import { useDogStore } from "@/entities/dog/model/types";
 import { useUserStore } from "@/entities/user/model/useUserStore";
 import { MyDogWidget } from "@/widgets/home/dog/ui/MyDogWidget";
 import { GreetMessage, QrCheckIn, Menu, NearByPlace } from "@/widgets/home/ui";
+import { HomeSkeleton } from "@/widgets/home/ui/HomeSkeleton";
+
 
 
 
@@ -12,9 +14,9 @@ export default function HomePage() {
   const { profile, isLoading } = useUserStore()
   const dog = useDogStore(state => state.dog)
 
-  if (isLoading) return <div>로딩 중...</div>;
-  const userData = { name: "홍길동", myCoupons: 2, visitCount: 12 };
-  const myDog = { name: "초코", status: "집에서 쉬는 중" };
+  if (isLoading) return <HomeSkeleton />;
+  // const userData = { name: "홍길동", myCoupons: 2, visitCount: 12 };
+  // const myDog = { name: "초코", status: "집에서 쉬는 중" };
 
 
   return (
