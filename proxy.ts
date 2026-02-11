@@ -1,7 +1,7 @@
 import { createClient } from "@/shared/api/supabase/supabaseMiddleware";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 
-export async function middleware(req: NextRequest){
+export default async function proxy(req: NextRequest){
     const {supabase, res} = createClient(req)
 
     const { data: {user}} = await supabase.auth.getUser()

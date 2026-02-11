@@ -6,6 +6,7 @@ import { DogRegisterModal } from "@/features/dog/ui/DogRegisterModal";
 import { MyDogWidget } from "@/widgets/home/dog/ui/MyDogWidget";
 import { GreetMessage, QrCheckIn, Menu, NearByPlace } from "@/widgets/home/ui";
 import { HomeSkeleton } from "@/widgets/home/ui/HomeSkeleton";
+import { useState } from "react";
 
 
 
@@ -14,6 +15,8 @@ import { HomeSkeleton } from "@/widgets/home/ui/HomeSkeleton";
 export default function HomePage() {
   const { profile, isLoading } = useUserStore()
   const dog = useDogStore(state => state.dog)
+
+  const [registerModalOpen, setRegisterModalOpen] = useState<boolean>(false)
 
   if (isLoading) return <HomeSkeleton />;
   // const userData = { name: "홍길동", myCoupons: 2, visitCount: 12 };
@@ -26,18 +29,14 @@ export default function HomePage() {
       <main className="p-6 space-y-6 ">
         {/* //*GreetMsg부분 */}
         <GreetMessage userData={profile} myDog={dog} />
-        
+
 
         {/* //* 쿠폰 --> 나중에 확장시 */}
         {/* <MembershipCard userData={userData} /> */}
 
-        <MyDogWidget />
+        <MyDogWidget registerClick={() => setRegisterModalOpen(true)} />
 
-        {/* //*지우기  */}
-        <DogRegisterModal
-        isOpen={true} 
-        // onClose={() => setIsRegOpen(false)} 
-      />
+
 
         {/* //*QR  */}
         <QrCheckIn />
@@ -46,8 +45,14 @@ export default function HomePage() {
         <Menu />
 
         {/* //*주변 애견카페  */}
-          <NearByPlace />
+        <NearByPlace />
       </main>
+
+      <DogRegisterModal
+        isOpen={registerModalOpen}
+        onClose={() => setRegisterModalOpen(false)}
+        profile={profile}
+      />
 
     </div>
   );
