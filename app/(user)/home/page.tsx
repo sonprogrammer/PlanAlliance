@@ -2,7 +2,9 @@
 
 import { useDogStore } from "@/entities/dog/model/types";
 import { useUserStore } from "@/entities/user/model/useUserStore";
-import { DogRegisterModal } from "@/features/dog/ui/DogRegisterModal";
+import { DogDetailModal } from "@/features/dog/ui/DogDetailModal/DogDetailModal";
+import { DogFormModal } from "@/features/dog/ui/DogFormModal";
+
 import { MyDogWidget } from "@/widgets/home/dog/ui/MyDogWidget";
 import { GreetMessage, QrCheckIn, Menu, NearByPlace } from "@/widgets/home/ui";
 import { HomeSkeleton } from "@/widgets/home/ui/HomeSkeleton";
@@ -14,9 +16,12 @@ import { useState } from "react";
 
 export default function HomePage() {
   const { profile, isLoading } = useUserStore()
-  const dog = useDogStore(state => state.dog)
+  const dogs = useDogStore(state => state.dogs)
+  const selectedDog = useDogStore(state => state.selectedDog)
+  console.log('dafasd', dogs)
 
-  const [registerModalOpen, setRegisterModalOpen] = useState<boolean>(false)
+  const [dogPostModalOpen, setDogPostModalOpen] = useState<boolean>(false)
+  const [dogViewModalOpen, setDogViewModalOpen] = useState<boolean>(false)
 
   if (isLoading) return <HomeSkeleton />;
   // const userData = { name: "홍길동", myCoupons: 2, visitCount: 12 };
@@ -28,13 +33,13 @@ export default function HomePage() {
 
       <main className="p-6 space-y-6 ">
         {/* //*GreetMsg부분 */}
-        <GreetMessage userData={profile} myDog={dog} />
+        <GreetMessage userData={profile} myDog={dogs} />
 
 
         {/* //* 쿠폰 --> 나중에 확장시 */}
         {/* <MembershipCard userData={userData} /> */}
 
-        <MyDogWidget registerClick={() => setRegisterModalOpen(true)} />
+        <MyDogWidget dogPostModal={() => setDogPostModalOpen(true)} dogViewModal={() => setDogViewModalOpen(true)}/>
 
 
 
@@ -48,10 +53,16 @@ export default function HomePage() {
         <NearByPlace />
       </main>
 
-      <DogRegisterModal
-        isOpen={registerModalOpen}
-        onClose={() => setRegisterModalOpen(false)}
+      <DogFormModal
+        isOpen={dogPostModalOpen}
+        onClose={() => setDogPostModalOpen(false)}
         profile={profile}
+      />
+
+      <DogDetailModal 
+        isOpen={dogViewModalOpen}
+        onClose={() => setDogViewModalOpen(false)} 
+        dog={selectedDog}
       />
 
     </div>

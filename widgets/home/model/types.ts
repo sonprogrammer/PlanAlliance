@@ -3,5 +3,10 @@ import { UserProfile } from '@/entities/user/model/useUserStore';
 
 export interface GreetMessageProps{
     userData: UserProfile |null;
-    myDog: Dog | null
+    myDog: Dog[] | null
+}
+
+export interface MyDogWidgetProps{
+    dogPostModal: ()=> void; 
+    dogViewModal: () => void;
 }

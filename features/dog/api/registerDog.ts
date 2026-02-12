@@ -1,7 +1,7 @@
-import { DogRegisterForm } from './../model/types';
+import { DogRegisterToSever } from './../model/types';
 import { supabaseClient } from "@/shared/api/supabase/client";
 
-export async function registerDog(formData: DogRegisterForm, image: File | null, userId: string) {
+export async function registerDog(formData: DogRegisterToSever, image: File | null, userId: string) {
     const supabase = supabaseClient()
 
     if(!userId) throw new Error('login first')
@@ -26,10 +26,10 @@ export async function registerDog(formData: DogRegisterForm, image: File | null,
         owner_id: userId,
         name: formData.name,
         breed: formData.breed,
-        weight: parseFloat(formData.weight) || 0,
+        weight: formData.weight || 0,
         description: formData.description,
         image_url: imageUrl,
-        birth_data: formData.birthDate
+        birth_date: formData.birth_date
     }])
 
     if(error) throw error

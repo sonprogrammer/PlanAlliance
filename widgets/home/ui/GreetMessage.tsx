@@ -11,9 +11,10 @@ export function GreetMessage({ userData, myDog }: GreetMessageProps) {
 
         {myDog ? (
           <p className="text-sm text-orange-500 font-medium">
-            {myDog.name}는 지금 
+            {/* TODO 여기서 만야겡 대표 강아지 없으면 첫번째 강아지로 나옴 */}
+            {myDog[0].name}는 지금 
             <span className="underline decoration-2">
-              {myDog.status}
+              {myDog[0].status}
             </span>
           </p>
 

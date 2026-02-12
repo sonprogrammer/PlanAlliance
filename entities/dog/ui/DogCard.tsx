@@ -2,21 +2,22 @@ import { Dog } from "@/entities/dog/model/types"
 import { ChevronRight, ChessQueen } from "lucide-react"
 
 
-export function DogCard({ dog }: {dog: Dog}) {
-    console.log('dog', dog)
+export function DogCard({ dog}: {dog: Dog}) {
     
     
 
     return (
  
-        <div className="bg-white rounded-[2.5rem] p-6 border border-orange-100 flex items-center justify-between">
-            <div className="flex items-center gap-4 relative">
+        <div className="bg-white rounded-[2.5rem] p-6 border border-orange-100 flex items-center justify-between" >
+            <div className="flex items-center gap-4 relative" >
                 <div className=" w-16 h-16 rounded-full overflow-hidden bg-orange-50">
                     {/* //TODO 만약 대표 애견이면 왕관 나오게 */}
-                    <ChessQueen className="absolute left-[-8] top-[-8] text-yellow-400 -rotate-20"/>
+                    {dog.is_primary && 
+                        <ChessQueen className="absolute left-[-8] top-[-8] text-yellow-400 -rotate-20"/>
+                    }
                     <img
                     // TODO 임시데이터로 해논거라 바꿔나야함, 이건 애견이 여러마리일수도 있어서 배열로 둠
-                        src={dog.imageUrl || "/icon.png"}
+                        src={dog.image_url || "/icon.png"}
                         alt={dog.name}
                     />
                 </div>
