@@ -14,6 +14,7 @@ export interface Dog{
 
 
 
+
 export interface DogState {
     dogs: Dog[] | null
     setDogs: (dogs: Dog[] | null) => void

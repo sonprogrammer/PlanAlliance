@@ -3,6 +3,7 @@ import { Camera } from "lucide-react";
 
 
 export function DogFormFields({ formData, setFormData, imagePreview, onImageChange, fileInputRef }: DogFormFieldsProps) {
+
     return (
         <div className="space-y-5">
 
@@ -12,15 +13,15 @@ export function DogFormFields({ formData, setFormData, imagePreview, onImageChan
                     className="relative w-32 h-32 rounded-[2.5rem] bg-slate-100 border-2 border-dashed border-slate-200 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-50 transition-colors overflow-hidden group"
                 >
                     <img
-                        src={formData.image_url || "/icon.png"}
-                        alt="dog-profile"
-                        className={`absolute inset-0 w-full h-full object-cover transition-opacity ${!imagePreview ? 'opacity-30' : 'opacity-100'}`}
+                        src={imagePreview || formData?.image_url || "/icon.png"}
+                        alt={"강아지 프로필 사진"}
+                        className={`absolute inset-0 w-full h-full object-cover transition-opacity ${!imagePreview || formData?.image_url  ? 'opacity-50' : 'opacity-100'}`}
                     />
 
                     <div className="relative z-10 flex flex-col items-center justify-center pointer-events-none">
-                        <Camera className={`w-8 h-8 ${imagePreview ? 'text-white drop-shadow-md' : 'text-slate-400'} mb-1`} />
-                        <span className={`text-[10px] font-bold ${imagePreview ? 'text-white drop-shadow-md' : 'text-slate-400'}`}>
-                            {imagePreview ? '사진 변경' : '사진 추가'}
+                        <Camera className={`w-8 h-8 ${imagePreview || formData?.image_url ? 'text-slate-700 drop-shadow-md' : 'text-slate-400'} mb-1`} />
+                        <span className={`text-[10px] font-bold ${imagePreview || formData?.image_url  ? 'text-slate-700 font-black drop-shadow-md' : 'text-slate-400'}`}>
+                            {imagePreview || formData?.image_url ? '사진 변경' : '사진 추가'}
                         </span>
                     </div>
 

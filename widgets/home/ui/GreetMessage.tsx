@@ -4,6 +4,7 @@ import { GreetMessageProps } from "@/widgets/home/model/types";
 
 export function GreetMessage({ userData, myDog }: GreetMessageProps) {
   console.log('user', myDog)
+  
   return (
     <section className="flex items-center justify-between">
       <div>

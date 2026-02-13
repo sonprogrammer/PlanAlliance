@@ -66,7 +66,6 @@ export function MyDogWidget({dogPostModal, dogViewModal}:MyDogWidgetProps) {
     }
     
     return(
-        // <DogCard dog={dogs ?? null} onEdit={handleEdit} />
         <div className="my-dog-swiper w-full">
             <Swiper
                 modules={[Pagination]}

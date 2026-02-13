@@ -2,8 +2,10 @@
 
 import { useDogStore } from "@/entities/dog/model/types";
 import { useUserStore } from "@/entities/user/model/useUserStore";
-import { DogDetailModal } from "@/features/dog/ui/DogDetailModal/DogDetailModal";
+import { useGetMyDogs } from "@/features/dog/model/useGetMyDogs";
+
 import { DogFormModal } from "@/features/dog/ui/DogFormModal";
+import { DogDetailModal } from "@/widgets/dog/ui/DogDetailModal";
 
 import { MyDogWidget } from "@/widgets/home/dog/ui/MyDogWidget";
 import { GreetMessage, QrCheckIn, Menu, NearByPlace } from "@/widgets/home/ui";
@@ -12,13 +14,11 @@ import { useState } from "react";
 
 
 
-
-
 export default function HomePage() {
   const { profile, isLoading } = useUserStore()
-  const dogs = useDogStore(state => state.dogs)
+  const { data: dogs } = useGetMyDogs(profile?.id)
   const selectedDog = useDogStore(state => state.selectedDog)
-  console.log('dafasd', dogs)
+  // console.log('dafasd', dogs)
 
   const [dogPostModalOpen, setDogPostModalOpen] = useState<boolean>(false)
   const [dogViewModalOpen, setDogViewModalOpen] = useState<boolean>(false)

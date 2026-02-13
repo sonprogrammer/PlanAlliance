@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Map, User, PawPrint } from "lucide-react";
+import { Home, Map, CircleUser, Dog } from "lucide-react";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -10,7 +10,8 @@ export default function Navbar() {
   const navItems = [
     { name: '홈', href: '/home', icon: Home },
     { name: '주변 찾기', href: '/around', icon: Map },
-    { name: '나의 멍패스', href: '/mypage', icon: PawPrint }, 
+    { name: '펫 관리', href: '/my-pets', icon: Dog },
+    { name: '나의 멍패스', href: '/mypage', icon: CircleUser }, 
   ];
 
   return (

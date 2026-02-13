@@ -1,43 +1,54 @@
+import { getDogAge } from "@/entities/dog/lib/getDogAge"
 import { Dog } from "@/entities/dog/model/types"
+import dayjs from "dayjs"
 import { ChevronRight, ChessQueen } from "lucide-react"
 
 
-export function DogCard({ dog}: {dog: Dog}) {
-    
-    
+export function DogCard({ dog }: { dog: Dog }) {
+
+
 
     return (
- 
+
         <div className="bg-white rounded-[2.5rem] p-6 border border-orange-100 flex items-center justify-between" >
             <div className="flex items-center gap-4 relative" >
                 <div className=" w-16 h-16 rounded-full overflow-hidden bg-orange-50">
                     {/* //TODO 만약 대표 애견이면 왕관 나오게 */}
-                    {dog.is_primary && 
-                        <ChessQueen className="absolute left-[-8] top-[-8] text-yellow-400 -rotate-20"/>
+                    {dog.is_primary &&
+                        <div className="absolute -top-1.5 -left-1.5 rounded-full p-1 shadow-sm">
+                            <ChessQueen className="w-4 h-4 text-yellow-500 -rotate-20 fill-yellow-500" />
+                        </div>
                     }
                     <img
-                    // TODO 임시데이터로 해논거라 바꿔나야함, 이건 애견이 여러마리일수도 있어서 배열로 둠
+                        // TODO 임시데이터로 해논거라 바꿔나야함, 이건 애견이 여러마리일수도 있어서 배열로 둠
                         src={dog.image_url || "/icon.png"}
-                        alt={dog.name}
+                        alt={'강아지 프로필 사진'}
+                        className="w-full h-full object-cover"
                     />
                 </div>
 
                 <div>
-                    <p className="text-lg font-black text-slate-800">
-                        {dog.name}
-                    </p>
-                    <span className="px-2 py-0.5 bg-orange-100 text-orange-600 text-[10px] font-bold rounded-full">
-                                        {dog.breed}
-                                    </span>
-                    <label></label>
-                    <p className="text-sm text-slate-500">
-                        몸무게 {dog.weight}kg
-                    </p>
+                    <div className="flex items-center gap-1">
+                        <p className="text-lg font-black text-slate-800">
+                            {dog.name}
+                        </p>
+                        <span className="text-[11px] font-bold text-orange-500">
+                            {getDogAge(dog.birth_date)}
+                        </span>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                        <span className="px-2 py-0.5 bg-orange-100 text-orange-600 text-[10px] font-bold rounded-full">
+                            생일 : {dog.birth_date ? dayjs(dog.birth_date).format('M월 DD일') : '-'}
+                        </span>
+                        <p className="text-sm text-slate-500">
+                            {dog.weight}kg
+                        </p>
+                    </div>
                 </div>
             </div>
 
             <button
-                // onClick={onEdit}
                 className="p-2 cursor-pointer rounded-full hover:bg-orange-100 group bg-orange-50 transition-colors"
             >
                 <ChevronRight className="w-6 h-6 text-orange-400 group-hover:translate-x-0.5 transition-transform" />
